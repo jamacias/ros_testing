@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<launch>
+    <!-- On WSL Ubuntu 16.04 shows a black window -->
+
+    <!-- Change arg params by adding <agrname>:=<value> -->
+    <arg name="model" default="$(find robot_description)/urdf/description.xacro" />
+    <arg name="gui" default="true" />
+    <arg name="paused" default="false" />
+    <arg name="use_sim_time" default="true" />
+    <arg name="headless" default="false" />
+    <arg name="debug" default="false" />
+
+    <include file="$(find gazebo_ros)/launch/empty_world.launch">
+        <arg name="debug" default="$(arg debug)" />
+        <arg name="gui" value="$(arg gui)" />
+        <arg name="paused" value="$(arg paused)" />
+        <arg name="use_sim_time" value="$(arg use_sim_time)" />
+        <arg name="headless" value="$(arg headless)" />
+    </include>
+    
+    <param name="robot_description" command="$(find xacro)/xacro --inorder $(arg model)" />
+
+    <!-- <node pkg="urdf_spawner" type="gazebo_ros" name="spawn_model"
+        args="-z 1.0 -unpause -urdf -model robot -param robot_description" respawn="false" output="screen" /> -->
+    
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher">
+        <param name="publish_frequency" type="double" value="30.0" />
+    </node>
+
+</launch>
